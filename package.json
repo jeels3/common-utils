@@ -1,5 +1,5 @@
 {
-  "name": "@jeels3/common-utils",
+  "name": "common-utils",
   "version": "1.0.0",
   "description": "Shared utilities for my personal projects",
   "main": "dist/index.js",
