@@ -1,0 +1,15 @@
+{
+  "name": "@jeels3/common-utils",
+  "version": "1.0.0",
+  "description": "Shared utilities for my personal projects",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}
