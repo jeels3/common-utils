@@ -82,6 +82,14 @@ declare class Validator<T = any> {
     withContext(checkFn: (ctx: ValidationContext, val: T) => boolean, msg?: string): this;
 }
 
+type ValidationSchema<T> = Partial<Record<keyof T, Validator<any>>>;
+declare class SchemaValidator<T> {
+    private schema;
+    constructor(schema: ValidationSchema<T>);
+    run(data: T, context?: ValidationContext): Promise<ValidationResult>;
+}
+declare function createSchema<T>(schema: ValidationSchema<T>): SchemaValidator<T>;
+
 declare const Rules: {
     required: () => ValidationRule;
     notNull: () => ValidationRule;
@@ -117,4 +125,4 @@ declare const BusinessRules: {
     adminOnly: () => ValidationRule;
 };
 
-export { BusinessRules, CrossFieldRules, ErrorCode, FormatRules, PatternRules, Rules, type Severity, type ValidationContext, type ValidationError, type ValidationResult, type ValidationRule, Validator, failureResult, successResult };
+export { BusinessRules, CrossFieldRules, ErrorCode, FormatRules, PatternRules, Rules, SchemaValidator, type Severity, type ValidationContext, type ValidationError, type ValidationResult, type ValidationRule, type ValidationSchema, Validator, createSchema, failureResult, successResult };

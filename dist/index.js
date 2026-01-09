@@ -26,7 +26,9 @@ __export(index_exports, {
   FormatRules: () => FormatRules,
   PatternRules: () => PatternRules,
   Rules: () => Rules,
+  SchemaValidator: () => SchemaValidator,
   Validator: () => Validator,
+  createSchema: () => createSchema,
   failureResult: () => failureResult,
   successResult: () => successResult
 });
@@ -358,6 +360,34 @@ var Validator = class {
     });
   }
 };
+
+// validation/core/SchemaValidator.ts
+var SchemaValidator = class {
+  schema;
+  constructor(schema) {
+    this.schema = schema;
+  }
+  async run(data, context = {}) {
+    const allErrors = [];
+    for (const key of Object.keys(this.schema)) {
+      const validator = this.schema[key];
+      const value = data[key];
+      if (validator) {
+        const result = await validator.run(value, context, data);
+        if (!result.valid) {
+          result.errors.forEach((err) => {
+            if (!err.field) err.field = String(key);
+          });
+          allErrors.push(...result.errors);
+        }
+      }
+    }
+    return allErrors.length === 0 ? successResult() : failureResult(allErrors);
+  }
+};
+function createSchema(schema) {
+  return new SchemaValidator(schema);
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   BusinessRules,
@@ -366,7 +396,9 @@ var Validator = class {
   FormatRules,
   PatternRules,
   Rules,
+  SchemaValidator,
   Validator,
+  createSchema,
   failureResult,
   successResult
 });

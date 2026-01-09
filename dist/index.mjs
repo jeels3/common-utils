@@ -324,6 +324,34 @@ var Validator = class {
     });
   }
 };
+
+// validation/core/SchemaValidator.ts
+var SchemaValidator = class {
+  schema;
+  constructor(schema) {
+    this.schema = schema;
+  }
+  async run(data, context = {}) {
+    const allErrors = [];
+    for (const key of Object.keys(this.schema)) {
+      const validator = this.schema[key];
+      const value = data[key];
+      if (validator) {
+        const result = await validator.run(value, context, data);
+        if (!result.valid) {
+          result.errors.forEach((err) => {
+            if (!err.field) err.field = String(key);
+          });
+          allErrors.push(...result.errors);
+        }
+      }
+    }
+    return allErrors.length === 0 ? successResult() : failureResult(allErrors);
+  }
+};
+function createSchema(schema) {
+  return new SchemaValidator(schema);
+}
 export {
   BusinessRules,
   CrossFieldRules,
@@ -331,7 +359,9 @@ export {
   FormatRules,
   PatternRules,
   Rules,
+  SchemaValidator,
   Validator,
+  createSchema,
   failureResult,
   successResult
 };
