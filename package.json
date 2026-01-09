@@ -1,5 +1,5 @@
 {
-  "name": "@jeels3/common-utils",
+  "name": "js-validation",
   "version": "2.0.0",
   "description": "Shared utilities for my personal projects",
   "main": "dist/index.js",
@@ -12,6 +12,6 @@
     "prepublishOnly": "npm run build"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   }
 }
